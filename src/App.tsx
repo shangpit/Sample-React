@@ -1,24 +1,27 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useEffect, useRef, useState } from 'react';
 import './App.css';
+import DynamicText from './DynamicText';
 
 function App() {
+  const refDiv = useRef<HTMLDivElement>(null);
+  const [inputValue, setInputValue] = useState<string>();
+  useEffect(() => {
+    if (refDiv?.current) {
+      // @ts-ignore
+      const childElm = refDiv?.current.firstElementChild;
+      console.log(childElm);
+      if (childElm && inputValue) {
+        childElm.innerHTML = inputValue;
+      }
+    }
+  }, [inputValue]);
+
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="App" ref={refDiv}>
+      <DynamicText />
+      <input onChange={e => setInputValue(e.target.value)} />
     </div>
   );
 }
